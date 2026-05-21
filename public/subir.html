@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Documento</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .contenedor{
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+
+        input{
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button{
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <h2>Subir Documento</h2>
+
+        <form id="formulario">
+
+            <input type="file" id="archivo">
+
+            <button type="submit">
+                Subir Archivo
+            </button>
+
+        </form>
+
+    </div>
+
+<script>
+
+const formulario = document.getElementById("formulario");
+
+formulario.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const archivo = document.getElementById("archivo").files[0];
+
+    if(!archivo){
+
+        alert("Selecciona un archivo");
+
+        return;
+
+    }
+
+    const formData = new FormData();
+
+    formData.append("archivo", archivo);
+
+    try{
+
+        const respuesta = await fetch("/subir", {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+        const resultado = await respuesta.json();
+
+        alert(resultado.mensaje);
+
+    }catch(error){
+
+        alert("Error al subir archivo");
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

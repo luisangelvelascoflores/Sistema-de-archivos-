@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>revision de Archivos</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+
+        h1{
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .contenedor{
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th{
+            background: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        td{
+            padding: 12px;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+        }
+
+        tr:hover{
+            background: #f1f1f1;
+        }
+
+        a{
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+
+        .boton{
+            padding: 8px 12px;
+            background: green;
+            color: white;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <h1>Archivos Subidos</h1>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Archivo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Abrir</th>
+                    <th>Eliminar</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabla">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+<script>
+
+async function cargarArchivos(){
+
+    const respuesta = await fetch("/documentos");
+
+    const datos = await respuesta.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    datos.forEach(doc => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${doc.id}</td>
+
+            <td>${doc.nombre_archivo}</td>
+
+            <td>${doc.nombre_estado}</td>
+
+            <td>${doc.fecha_subida}</td>
+
+            <td>
+
+                <a href="/uploads/${doc.nombre_archivo}" target="_blank">
+
+        Abrir
+
+    </a>
+
+</td>
+
+<td>
+
+    <button onclick="eliminarArchivo(${doc.id})">
+
+        Eliminar
+
+    </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+cargarArchivos();
+
+async function eliminarArchivo(id){
+
+    const respuesta = await fetch(`/eliminar/${id}`, {
+
+        method: "DELETE"
+
+    });
+
+    const resultado = await respuesta.json();
+
+    alert(resultado.mensaje);
+
+    location.reload();
+
+}
+
+</script>
+
+</body>
+</html>

@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS usuarios(
 
     correo VARCHAR(100),
 
-    password VARCHAR(100)
+    password VARCHAR(100),
+
+    rol_id INT,
+
+    FOREIGN KEY (rol_id) REFERENCES roles(id)
 
 );
 
@@ -105,7 +109,7 @@ CREATE TABLE IF NOT EXISTS documentos (
 
 );
 
-CREATE TABLE revisiones (
+CREATE TABLE IF NOT EXISTS revisiones (
 
     id INT AUTO_INCREMENT PRIMARY KEY,
 
@@ -123,3 +127,4 @@ CREATE TABLE revisiones (
     FOREIGN KEY (revisor_id) REFERENCES usuarios(id)
 
 );
+
