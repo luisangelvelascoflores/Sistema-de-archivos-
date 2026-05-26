@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración General</title>
+
+    <style>
+
+        body{
+
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 30px;
+
+        }
+
+        .panel{
+
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+
+        }
+
+        button{
+
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <button onclick="cerrarSesion()">
+
+        Cerrar Sesión
+
+    </button>
+
+    <div class="panel">
+
+        <h1>Panel Administración General</h1>
+
+        <p>
+
+            Bienvenido usuario AG
+
+        </p>
+
+    </div>
+
+<script>
+
+function cerrarSesion(){
+
+    localStorage.removeItem("usuario");
+
+    window.location.href = "login.html";
+
+}
+
+</script>
+
+</body>
+</html>

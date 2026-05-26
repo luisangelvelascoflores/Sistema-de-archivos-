@@ -8,29 +8,42 @@
     <style>
 
         body{
+
             font-family: Arial;
-            background: #f0f2f5;
+            background: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+
         }
 
         .login{
+
             background: white;
             padding: 30px;
-            width: 300px;
             border-radius: 10px;
+            width: 300px;
             box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+
+        }
+
+        h2{
+
+            text-align: center;
+
         }
 
         input{
+
             width: 100%;
             padding: 10px;
             margin-top: 10px;
+
         }
 
         button{
+
             width: 100%;
             padding: 10px;
             margin-top: 15px;
@@ -38,6 +51,7 @@
             color: white;
             border: none;
             cursor: pointer;
+
         }
 
     </style>
@@ -53,7 +67,11 @@
 
         <input type="password" id="password" placeholder="Contraseña">
 
-        <button onclick="login()">Ingresar</button>
+        <button onclick="login()">
+
+            Entrar
+
+        </button>
 
     </div>
 
@@ -69,20 +87,64 @@ async function login(){
 
         method: "POST",
 
-        headers:{
-            "Content-Type":"application/json"
+        headers: {
+
+            "Content-Type": "application/json"
+
         },
 
         body: JSON.stringify({
-            correo: correo,
-            password: password
+
+            correo,
+            password
+
         })
 
     });
 
-    const data = await respuesta.json();
+    const resultado = await respuesta.json();
 
-    alert(data.mensaje);
+    alert(resultado.mensaje);
+
+    if(resultado.mensaje === "Login correcto"){
+
+        localStorage.setItem(
+
+            "usuario",
+
+            JSON.stringify(resultado.usuario)
+
+        );
+
+        const rol = resultado.usuario.nombre_rol;
+
+        if(rol === "DG"){
+
+            window.location.href = "admin.html";
+
+        }else if(rol === "CI"){
+
+            window.location.href = "revision.html";
+
+        }else if(rol === "ACA"){
+
+            window.location.href = "subir.html";
+
+        }else if(rol === "D"){
+
+            window.location.href = "direccion.html";
+
+        }else if(rol === "AG"){
+
+            window.location.href = "ag.html";
+
+        }else{
+
+            alert("Rol no encontrado");
+
+        }
+
+    }
 
 }
 

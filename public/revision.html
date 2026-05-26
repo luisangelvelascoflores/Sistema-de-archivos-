@@ -3,59 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>revision de Archivos</title>
+    <title>Documentos</title>
 
     <style>
 
         body{
+
             font-family: Arial;
             background: #f4f4f4;
-            padding: 30px;
-        }
+            padding: 20px;
 
-        h1{
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .contenedor{
-            max-width: 1000px;
-            margin: auto;
         }
 
         table{
+
             width: 100%;
             border-collapse: collapse;
             background: white;
+
         }
 
-        th{
-            background: #333;
-            color: white;
-            padding: 15px;
-        }
+        th, td{
 
-        td{
-            padding: 12px;
-            border-bottom: 1px solid #ccc;
+            border: 1px solid #ccc;
+            padding: 10px;
             text-align: center;
+
         }
 
-        tr:hover{
-            background: #f1f1f1;
+        button{
+
+            padding: 5px 10px;
+            cursor: pointer;
+
         }
 
-        a{
-            text-decoration: none;
-            color: blue;
-            font-weight: bold;
-        }
+        .cerrar{
 
-        .boton{
-            padding: 8px 12px;
-            background: green;
+            background: red;
             color: white;
-            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+
         }
 
     </style>
@@ -63,48 +52,52 @@
 </head>
 <body>
 
-    <div class="contenedor">
+    <button class="cerrar" onclick="cerrarSesion()">
 
-        <h1>Archivos Subidos</h1>
+        Cerrar Sesión
 
-        <table>
+    </button>
 
-            <thead>
+    <h2>Lista de Documentos</h2>
 
-                <tr>
+    <table>
 
-                    <th>ID</th>
-                    <th>Archivo</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                    <th>Abrir</th>
-                    <th>Eliminar</th>
+        <thead>
 
-                </tr>
+            <tr>
 
-            </thead>
+                <th>ID</th>
+                <th>Archivo</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Abrir</th>
+                <th>Eliminar</th>
 
-            <tbody id="tabla">
+            </tr>
 
-            </tbody>
+        </thead>
 
-        </table>
+        <tbody id="tablaDocumentos">
 
-    </div>
+        </tbody>
+
+    </table>
 
 <script>
 
-async function cargarArchivos(){
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+async function cargarDocumentos(){
 
     const respuesta = await fetch("/documentos");
 
-    const datos = await respuesta.json();
+    const documentos = await respuesta.json();
 
-    const tabla = document.getElementById("tabla");
+    const tabla = document.getElementById("tablaDocumentos");
 
     tabla.innerHTML = "";
 
-    datos.forEach(doc => {
+    documentos.forEach(doc => {
 
         tabla.innerHTML += `
 
@@ -122,19 +115,23 @@ async function cargarArchivos(){
 
                 <a href="/uploads/${doc.nombre_archivo}" target="_blank">
 
-        Abrir
+                    Abrir
 
-    </a>
+                </a>
 
-</td>
+            </td>
 
-<td>
+            <td>
 
-    <button onclick="eliminarArchivo(${doc.id})">
+                ${usuario.nombre_rol === "DG" ? `
 
-        Eliminar
+                <button onclick="eliminarArchivo(${doc.id})">
 
-    </button>
+                    Eliminar
+
+                </button>
+
+                ` : "Sin permiso"}
 
             </td>
 
@@ -146,9 +143,15 @@ async function cargarArchivos(){
 
 }
 
-cargarArchivos();
-
 async function eliminarArchivo(id){
+
+    const confirmar = confirm("¿Eliminar archivo?");
+
+    if(!confirmar){
+
+        return;
+
+    }
 
     const respuesta = await fetch(`/eliminar/${id}`, {
 
@@ -160,9 +163,19 @@ async function eliminarArchivo(id){
 
     alert(resultado.mensaje);
 
-    location.reload();
+    cargarDocumentos();
 
 }
+
+function cerrarSesion(){
+
+    localStorage.removeItem("usuario");
+
+    window.location.href = "login.html";
+
+}
+
+cargarDocumentos();
 
 </script>
 

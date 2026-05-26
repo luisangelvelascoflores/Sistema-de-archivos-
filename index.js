@@ -58,7 +58,21 @@ app.post("/login", (req, res) => {
 
     const password = req.body.password;
 
-    const sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
+    const sql = `
+
+    SELECT 
+        usuarios.id,
+        usuarios.correo,
+        roles.nombre_rol
+
+    FROM usuarios
+
+    INNER JOIN roles
+    ON usuarios.rol_id = roles.id
+
+    WHERE correo = ? AND password = ?
+
+    `;
 
     conexion.query(sql, [correo, password], (err, resultado) => {
 
@@ -73,7 +87,11 @@ app.post("/login", (req, res) => {
         if(resultado.length > 0){
 
             res.json({
-                mensaje: "Login correcto"
+
+                mensaje: "Login correcto",
+
+                usuario: resultado[0]
+
             });
 
         }else{

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir Archivo</title>
+    <title>Administrador</title>
 
     <style>
 
@@ -11,24 +11,21 @@
 
             font-family: Arial;
             background: #f4f4f4;
-            padding: 30px;
+            padding: 20px;
 
         }
 
-        .contenedor{
+        .panel{
 
             background: white;
             padding: 20px;
             border-radius: 10px;
-            width: 400px;
-            margin: auto;
 
         }
 
         button{
 
             padding: 10px;
-            margin-top: 10px;
             cursor: pointer;
 
         }
@@ -52,61 +49,25 @@
 
     </button>
 
-    <div class="contenedor">
+    <div class="panel">
 
-        <h2>Subir Documento</h2>
+        <h1>Panel Administrador</h1>
 
-        <input type="file" id="archivo">
+        <p>
 
-        <br>
+            Bienvenido Director General
 
-        <button onclick="subirArchivo()">
-
-            Subir Archivo
-
-        </button>
-
-        <br><br>
+        </p>
 
         <a href="revision.html">
 
-            Ver Documentos
+            Ver documentos
 
         </a>
 
     </div>
 
 <script>
-
-async function subirArchivo(){
-
-    const archivo = document.getElementById("archivo").files[0];
-
-    if(!archivo){
-
-        alert("Selecciona un archivo");
-
-        return;
-
-    }
-
-    const formData = new FormData();
-
-    formData.append("archivo", archivo);
-
-    const respuesta = await fetch("/subir", {
-
-        method: "POST",
-
-        body: formData
-
-    });
-
-    const resultado = await respuesta.json();
-
-    alert(resultado.mensaje);
-
-}
 
 function cerrarSesion(){
 
