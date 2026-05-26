@@ -5,6 +5,12 @@ const fs = require("fs");
 
 const app = express();
 
+app.use(express.json());
+
+app.use(express.static("public"));
+
+app.use("/uploads", express.static("uploads"));
+
 const storage = multer.diskStorage({
 
     destination: (req, file, cb) => {
@@ -22,12 +28,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-app.use(express.json());
-
-app.use(express.static("public"));
-
-app.use("/uploads", express.static("uploads"));
 
 const conexion = mysql.createConnection({
 
@@ -108,24 +108,21 @@ app.post("/login", (req, res) => {
 
 app.post("/subir", upload.single("archivo"), (req, res) => {
 
-    if(!req.file){
+    const nombreArchivo = req.file.filename;
 
-        return res.json({
-            mensaje: "No se subió ningún archivo"
-        });
-
-    }
+    const rutaArchivo = req.file.path;
 
     const sql = `
 
     INSERT INTO documentos(
-        usuario_id,
+
         nombre_archivo,
         ruta_archivo,
         estado_id
+
     )
 
-    VALUES (?, ?, ?, ?)
+    VALUES (?, ?, ?)
 
     `;
 
@@ -134,20 +131,17 @@ app.post("/subir", upload.single("archivo"), (req, res) => {
         sql,
 
         [
-            1,
-            req.file.filename,
-            req.file.path,
+            nombreArchivo,
+            rutaArchivo,
             1
         ],
 
-        (err, resultado) => {
+        (err) => {
 
             if(err){
 
-                console.log(err);
-
                 return res.json({
-                    mensaje: "Error al guardar documento"
+                    mensaje: "Error al subir archivo"
                 });
 
             }
@@ -183,11 +177,7 @@ app.get("/documentos", (req, res) => {
 
         if(err){
 
-            console.log(err);
-
-            return res.json({
-                mensaje: "Error al obtener documentos"
-            });
+            return res.json([]);
 
         }
 
@@ -197,26 +187,88 @@ app.get("/documentos", (req, res) => {
 
 });
 
+app.put("/aprobar/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = `
+
+    UPDATE documentos
+
+    SET estado_id = 2
+
+    WHERE id = ?
+
+    `;
+
+    conexion.query(sql, [id], (err) => {
+
+        if(err){
+
+            return res.json({
+                mensaje: "Error al aprobar"
+            });
+
+        }
+
+        res.json({
+            mensaje: "Documento aprobado"
+        });
+
+    });
+
+});
+
+app.put("/rechazar/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = `
+
+    UPDATE documentos
+
+    SET estado_id = 3
+
+    WHERE id = ?
+
+    `;
+
+    conexion.query(sql, [id], (err) => {
+
+        if(err){
+
+            return res.json({
+                mensaje: "Error al rechazar"
+            });
+
+        }
+
+        res.json({
+            mensaje: "Documento rechazado"
+        });
+
+    });
+
+});
+
 app.delete("/eliminar/:id", (req, res) => {
 
     const id = req.params.id;
 
-    const sqlBuscar = "SELECT * FROM documentos WHERE id = ?";
+    const sqlBuscar = `
+
+    SELECT * FROM documentos
+
+    WHERE id = ?
+
+    `;
 
     conexion.query(sqlBuscar, [id], (err, resultado) => {
 
         if(err){
 
             return res.json({
-                mensaje: "Error al buscar archivo"
-            });
-
-        }
-
-        if(resultado.length === 0){
-
-            return res.json({
-                mensaje: "Archivo no encontrado"
+                mensaje: "Error"
             });
 
         }
@@ -231,22 +283,28 @@ app.delete("/eliminar/:id", (req, res) => {
 
             }
 
-            const sqlEliminar = "DELETE FROM documentos WHERE id = ?";
+        });
 
-            conexion.query(sqlEliminar, [id], (err) => {
+        const sqlEliminar = `
 
-                if(err){
+        DELETE FROM documentos
 
-                    return res.json({
-                        mensaje: "Error al eliminar"
-                    });
+        WHERE id = ?
 
-                }
+        `;
 
-                res.json({
-                    mensaje: "Archivo eliminado"
+        conexion.query(sqlEliminar, [id], (err) => {
+
+            if(err){
+
+                return res.json({
+                    mensaje: "Error eliminando"
                 });
 
+            }
+
+            res.json({
+                mensaje: "Archivo eliminado"
             });
 
         });
@@ -257,6 +315,6 @@ app.delete("/eliminar/:id", (req, res) => {
 
 app.listen(3000, () => {
 
-    console.log("Servidor funcionando en puerto 3000");
+    console.log("Servidor funcionando");
 
 });

@@ -1,79 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
+<title>Login</title>
 
-        body{
+<style>
 
-            font-family: Arial;
-            background: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+body{
 
-        }
+    font-family: Arial;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 
-        .login{
+}
 
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+.login{
 
-        }
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
 
-        h2{
+}
 
-            text-align: center;
+input{
 
-        }
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
 
-        input{
+}
 
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+button{
 
-        }
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
 
-        button{
+}
 
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-
-        }
-
-    </style>
+</style>
 
 </head>
 <body>
 
-    <div class="login">
+<div class="login">
 
-        <h2>Iniciar Sesión</h2>
+<h2>Iniciar Sesión</h2>
 
-        <input type="email" id="correo" placeholder="Correo">
+<input type="email" id="correo" placeholder="Correo">
 
-        <input type="password" id="password" placeholder="Contraseña">
+<input type="password" id="password" placeholder="Contraseña">
 
-        <button onclick="login()">
+<button onclick="login()">
 
-            Entrar
+Entrar
 
-        </button>
+</button>
 
-    </div>
+</div>
 
 <script>
 
@@ -137,10 +131,6 @@ async function login(){
         }else if(rol === "AG"){
 
             window.location.href = "ag.html";
-
-        }else{
-
-            alert("Rol no encontrado");
 
         }
 
